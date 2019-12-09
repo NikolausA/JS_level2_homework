@@ -32,17 +32,17 @@ class GoodsList {
         document.querySelector('.goods-list').innerHTML = listHtml;
     }
     sumGoodsPrices() {
-        let sum = 0;
-        this.goods.forEach(good => {
+        let goodsCost = this.goods.reduce((sum, price) => {
             sum +=this.goods.price;
-        })
-        console.log('Сумма всех товаров ' + sum);
+        }, 0);
+        console.log(goodsCost);
     }
 }
 
 const list = new GoodsList();
 list.fetchGoods();
 list.render();
+list.sumGoodsPrices();
 
 class BacketGoodsItem {
     constructor(title = '', price = '', quantity = '') {
