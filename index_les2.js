@@ -32,9 +32,8 @@ class GoodsList {
         document.querySelector('.goods-list').innerHTML = listHtml;
     }
     sumGoodsPrices() {
-        let goodsCost = this.goods.reduce((sum, price) => {
-            sum +=this.goods.price;
-        }, 0);
+        let goodsCost = this.goods.reduce((sum, good) => 
+            sum + good.price, 0);
         console.log(goodsCost);
     }
 }
