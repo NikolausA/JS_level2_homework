@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>eShop</title>
+    <link rel="stylesheet" href="reset.css">
+    <style>
+        header {
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-end;
+            border-bottom: 2px solid darkgrey;
+            margin-bottom: 20px;
+        }
+        .cart-button {
+            -webkit-appearance: none;
+            border: none;
+            background-color: lightsteelblue;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        main {
+            margin: 50px auto;
+            width: 1080px;
+        }
+
+        .goods-list {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .goods-item {
+            border: 1px solid darkblue;
+            background-color: lightcyan;
+            border-radius: 10px;
+            width: 200px;
+            height: 250px;
+            position: relative;
+        }
+        .title {
+            display: block;
+            position: absolute;
+            top: 215px;
+            left: 75px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        p {
+            width: 32px;
+            height: auto;
+            position: absolute;
+            top: 10px;
+            left: 160px;
+            font: bold 16px "Times New Roman";
+            color: #fff;
+            background-color: darkgrey;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <button class="cart-button">Корзина</button>
+</header>
+<main>
+    <div class="goods-list"></div>
+</main>
+<script src="index.js"></script>
+</body>
+</html>
