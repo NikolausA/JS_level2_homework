@@ -8,10 +8,26 @@
     <title>eShop</title>
     <link rel="stylesheet" href="reset.css">
     <style>
+        header {
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-end;
+            border-bottom: 2px solid darkgrey;
+            margin-bottom: 20px;
+        }
+        .cart-button {
+            -webkit-appearance: none;
+            border: none;
+            background-color: lightsteelblue;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
         main {
             margin: 50px auto;
             width: 1080px;
         }
+
         .goods-list {
             width: 100%;
             display: flex;
@@ -25,11 +41,13 @@
             height: 250px;
             position: relative;
         }
-        h3 {
+        .title {
             display: block;
             position: absolute;
             top: 215px;
             left: 75px;
+            font-size: 18px;
+            font-weight: bold;
         }
         p {
             width: 32px;
