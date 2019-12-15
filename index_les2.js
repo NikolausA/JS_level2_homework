@@ -32,21 +32,31 @@ class GoodsList {
         document.querySelector('.goods-list').innerHTML = listHtml;
     }
     sumGoodsPrices() {
-        let goodsCost = this.goods.reduce((sum, good) => 
-            sum + good.price, 0);
-        console.log(goodsCost);
+        return this.goods.reduce((sum, good) => { 
+        if (good.price) sum += good.price; 
+        return sum;
+        }, 0);
     }
+}
+
+class CartItem extends GoodsItem {
+    constructor(props) {
+        super(props);
+    }
+    delete() {}
+}
+
+class Cart extends GoodsList {
+    constructor(props) {
+        super(props);
+    }
+    clean() {}
+    incGood() {}
+    decGood() {}
 }
 
 const list = new GoodsList();
 list.fetchGoods();
 list.render();
 list.sumGoodsPrices();
-
-class BacketGoodsItem {
-    constructor(title = '', price = '', quantity = '') {
-        this.title = title;
-        this.price = price;
-        this.quantity = quantity;
-    }
-}
+console.log(list.sumGoodsPrices());
