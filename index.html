@@ -44,7 +44,7 @@
         .title {
             display: block;
             position: absolute;
-            top: 215px;
+            top: 200px;
             left: 75px;
             font-size: 18px;
             font-weight: bold;
@@ -61,15 +61,39 @@
             background-color: darkgrey;
             text-align: center;
         }
+        .to-cart {
+            width: auto;
+            height: auto;
+            padding: 4px;
+            position: absolute;
+            top: 225px;
+            left: 140px;
+            outline: none;
+            font-size: 10px;
+            font-weight: bold;
+            border: none;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
-<header>
+<div id="app">
+   <main>
+       <div class="gooods-list">
+        <div class="goods-item" v-for="good in filteredGoods">
+            <h3>{{ good.product_name }}</h3>
+            <p>{{ good.price }}</p>
+        </div>
+    </div>
+   </main>  
+</div>
+<!--<header>
     <button class="cart-button">Корзина</button>
 </header>
 <main>
     <div class="goods-list"></div>
-</main>
-<script src="index.js"></script>
+</main>-->
+   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
