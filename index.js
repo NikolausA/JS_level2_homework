@@ -84,12 +84,15 @@
 //});
 //console.log(list.sumGoodsPrices());
 
+const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
 const app = new Vue({
     el: '#app',
     data: {
         goods: [],
         filteredGoods: [],
-        searchLine: ''
+        searchLine: '',
+        isVisibleCart: false,
     },
     metods: {
         makeGETRequest(url) {
@@ -116,8 +119,20 @@ const app = new Vue({
                 xhr.open('GET', url);
                 xhr.send();
             });
+        },
+        filterGoods() {
+            const regexp = new RegExp(this.searchLine, 'i');
+            this.filterGoods = this.goods.filter((good) => regexp.test(good.product_name));
+        },
+        toggleCartVisibility() {
+            this.isVisibleCart = !this.isVisibleCart;
         }
     },
+    computed: {
+        isFilteredGoodsEmpty() {
+            return this.filteredGoods.length === 0;
+        }
+    }
     async mounted() {
         try {
             this.goods = await this.makeGETRequest(`${API_URL}/catalogData.json`);
