@@ -10,10 +10,15 @@
     <style>
         header {
             padding: 10px 20px;
-            display: flex;
-            justify-content: flex-end;
+/*            display: flex;*/
+/*            justify-content: flex-end;*/
             border-bottom: 2px solid darkgrey;
             margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
         }
         .cart-button {
             -webkit-appearance: none;
@@ -22,6 +27,14 @@
             color: #fff;
             padding: 5px 10px;
             border-radius: 3px;
+        }
+        .cart-container {
+            width: 250px;
+            min-height: 200px;
+            border: 1px solid purple;
+            position: absolute;
+            right: 0;
+            top: 50px;
         }
         main {
             margin: 50px auto;
@@ -78,12 +91,25 @@
 </head>
 <body>
 <div id="app">
+  <header class="header">
+      <div class="container">
+          <form class="search-form" @submit.prevent="filterGoods">
+              <input type="text" class="search-input" v-model="searchLine">
+              <button class="search-button">Искать</button>
+          </form>
+          <button class="cart-button" @click="toggleCartVisibility">Корзина</button>
+          <div class="cart-container" v-if="isVisibleCart"></div>
+      </div>
+  </header>
    <main>
-       <div class="gooods-list">
-        <div class="goods-item" v-for="good in filteredGoods">
+    <div class="gooods-list" v-if="!isFilteredGoodsEmpty">
+        <div class="goods-item" v-for="good in filteredGoods" :key="good.id_product">
             <h3>{{ good.product_name }}</h3>
             <p>{{ good.price }}</p>
         </div>
+    </div>
+    <div class="not-found-items" v-else>
+        <h2>Нет данных</h2>
     </div>
    </main>  
 </div>
