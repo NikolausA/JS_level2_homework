@@ -1,85 +1,114 @@
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
-const makeGETRequest = (url, callback) => {
-    let xhr;
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            if (window.XMLHttpRequest) {
-                xhr = new window.XMLHttpRequest();
+
+//const cart = [];
+
+Vue.component('goods-item', {
+  props: ['good'],
+  template: `
+    <div class="goods-item">
+        <h3>{{ good.product_name }}</h3>
+        <p>{{ good.price }}</p>
+    </div>
+  `,
+});
+
+Vue.component('goods-list', {
+  props: ['goods'],
+  computed: {
+    isGoodsEmpty() {
+      return this.goods.length === 0;
+    }
+  },
+  template: `
+    <div class="goods-list" v-if="!isGoodsEmpty">
+      <goods-item v-for="good in goods" :good="good" :key="good.id_product"></goods-item>
+    </div>
+    <div class="not-found-items" v-else>
+      <h2>Нет данных</h2>
+    </div>
+  `
+});
+
+Vue.component('cart', {
+    props: [],
+    methods: {
+        toggleCartVisibility() {
+        this.isVisibleCart = !this.isVisibleCart;
+        },
+    },
+    template: `
+        <div class="cart-container">
+            <button class="cart-button" @click="toggleCartVisibility">Корзина</button>
+            <div class="cart-box" v-if="isVisibleCart">
+        </div>
+    `
+});
+
+Vue.component('search', {
+    props: '',
+    computed: {
+        filteredGoods() {
+            const regexp = new RegExp(searchValue, 'i');
+            return this.goods.filter((good) => regexp.test(good.product_name));
+        },
+    },
+    template: `
+        <form class="search-form" @submit.prevent>
+            <input type="text" class="search-input" v-model.trim="searchLine"/>
+        </form>
+    `
+});
+
+const app = new Vue({
+  el: '#app',
+  data: {
+    goods: [],
+    searchLine: '',
+    isVisibleCart: false,
+  },
+  methods: {
+    makeGETRequest(url) {
+      return new Promise((resolve, reject) => {
+        let xhr;
+        if (window.XMLHttpRequest) {
+          xhr = new window.XMLHttpRequest();
+        } else {
+          xhr = new window.ActiveXObject('Microsoft.XMLHTTP');
+        }
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              const body = JSON.parse(xhr.responseText);
+              resolve(body)
             } else {
-                xhr = new window.activeXObject('Microsoft.XMLHTTP');
+              reject(xhr.responseText);
             }
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-            const body = JSON.parse(xhr.responseText);
-            callback(body)
-            } else {
-                reject('Error')
-            }
+          }
         };
+        xhr.onerror = function (err) {
+          reject(err);
+        };
+
         xhr.open('GET', url);
         xhr.send();
-        }, 1000);
-    });   
-}
-
-class GoodsItem {
-    constructor(title = 'Без имени', price = '') {
-        this.title = title;
-        this.price = price;
+      });
+    },
+//    toggleCartVisibility() {
+//      this.isVisibleCart = !this.isVisibleCart;
+//    },
+  },
+//  computed: {
+//    filteredGoods() {
+//      const regexp = new RegExp(searchValue, 'i');
+//      return this.goods.filter((good) => regexp.test(good.product_name));
+//    },
+//  },
+  async mounted() {
+    try {
+      this.goods = await this.makeGETRequest(`${API_URL}/catalogData.json`);
+    } catch (e) {
+      console.error(e);
     }
-    render() {
-        return `<div class="goods-item">
-                    <h3 class="title goods-title">${this.title}</h3>
-                    <p>${this.price} ₽</p>
-                </div>`;
-    }
-}
-
-class GoodsList {
-    constructor() {
-        this.goods = [];
-    }
-    fetchGoods(cb)  {
-        makeGETRequest(`${API_URL}/catalogData.json`, (goods) => {
-            this.goods = goods;
-            cb();
-        });
-    }
-    render() {
-        let listHtml = '';
-        this.goods.forEach(good => {
-            const goodItem = new GoodsItem(good.product_name, good.price);
-            listHtml += goodItem.render();
-        });
-        document.querySelector('.goods-list').innerHTML = listHtml;
-    }
-    sumGoodsPrices() {
-        return this.goods.reduce((sum, good) => { 
-        if (good.price) sum += good.price; 
-        return sum;
-        }, 0);
-    }
-}
-
-class CartItem extends GoodsItem {
-    constructor(props) {
-        super(props);
-    }
-    delete() {}
-}
-
-class Cart extends GoodsList {
-    constructor(props) {
-        super(props);
-    }
-    clean() {}
-    incGood() {}
-    decGood() {}
-}
-
-const list = new GoodsList();
-list.fetchGoods(() => {
-    list.render();
+  }
 });
-console.log(list.sumGoodsPrices());
-
