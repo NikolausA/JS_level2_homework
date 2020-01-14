@@ -7,14 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>eShop</title>
     <link rel="stylesheet" href="reset.css">
-<!--
     <style>
         header {
             padding: 10px 20px;
-            display: flex;
-            justify-content: flex-end;
+/*            display: flex;*/
+/*            justify-content: flex-end;*/
             border-bottom: 2px solid darkgrey;
             margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
         }
         .cart-button {
             -webkit-appearance: none;
@@ -24,6 +28,14 @@
             padding: 5px 10px;
             border-radius: 3px;
         }
+        .cart-container {
+            width: 250px;
+            min-height: 200px;
+            border: 1px solid purple;
+            position: absolute;
+            right: 0;
+            top: 50px;
+        }
         main {
             margin: 50px auto;
             width: 1080px;
@@ -32,7 +44,7 @@
         .goods-list {
             width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
         }
         .goods-item {
             border: 1px solid darkblue;
@@ -45,32 +57,69 @@
         .title {
             display: block;
             position: absolute;
-            top: 215px;
+            top: 200px;
             left: 75px;
             font-size: 18px;
             font-weight: bold;
         }
         p {
-            width: 32px;
+            width: auto;
             height: auto;
+            padding: 4px;
             position: absolute;
             top: 10px;
-            left: 160px;
-            font: bold 16px "Times New Roman";
+            left: 150px;
+            font: bold 12px "Times New Roman";
             color: #fff;
             background-color: darkgrey;
             text-align: center;
         }
+        .to-cart {
+            width: auto;
+            height: auto;
+            padding: 4px;
+            position: absolute;
+            top: 225px;
+            left: 140px;
+            outline: none;
+            font-size: 10px;
+            font-weight: bold;
+            border: none;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
-<header>
+<div id="app">
+  <header class="header">
+      <div class="container">
+          <form class="search-form" @submit.prevent="filterGoods">
+              <input type="text" class="search-input" v-model="searchLine">
+              <button class="search-button">Искать</button>
+          </form>
+          <button class="cart-button" @click="toggleCartVisibility">Корзина</button>
+          <div class="cart-container" v-if="isVisibleCart"></div>
+      </div>
+  </header>
+   <main>
+    <div class="gooods-list" v-if="!isFilteredGoodsEmpty">
+        <div class="goods-item" v-for="good in filteredGoods" :key="good.id_product">
+            <h3>{{ good.product_name }}</h3>
+            <p>{{ good.price }}</p>
+        </div>
+    </div>
+    <div class="not-found-items" v-else>
+        <h2>Нет данных</h2>
+    </div>
+   </main>  
+</div>
+<!--<header>
     <button class="cart-button">Корзина</button>
 </header>
 <main>
     <div class="goods-list"></div>
-</main>
--->
-<script src="index.js"></script>
+</main>-->
+   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

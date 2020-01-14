@@ -18,7 +18,7 @@
 //        };
 //        xhr.open('GET', url);
 //        xhr.send();
-//        }, 2000);
+//        }, 500);
 //    });   
 //}
 //
@@ -31,6 +31,7 @@
 //        return `<div class="goods-item">
 //                    <h3 class="title goods-title">${this.title}</h3>
 //                    <p>${this.price} ₽</p>
+//                    <button class="to-cart">В корзину</button>
 //                </div>`;
 //    }
 //}
@@ -76,16 +77,68 @@
 //    incGood() {}
 //    decGood() {}
 //}
-//
+
 //const list = new GoodsList();
 //list.fetchGoods(() => {
 //    list.render();
 //});
 //console.log(list.sumGoodsPrices());
 
-//Код домашнего задания "Регулярные выражения"
+const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
-const text = "She said 'We are going to the market.'";
-const regexp = /(\b\') | (\'\/.\b)/gm;
-text1 = text.replace(regexp, '"');
-console.log(text1);
+const app = new Vue({
+    el: '#app',
+    data: {
+        goods: [],
+        filteredGoods: [],
+        searchLine: '',
+        isVisibleCart: false,
+    },
+    metods: {
+        makeGETRequest(url) {
+            return new Promise((resolve, reject) => {
+                let xhr;
+                if(window.XMLHttpRequest) {
+                    xhr = new window.XMLHttpRequest();
+                } else {
+                    xhr = new window.ActiveXObject('Microsoft.XMLHTTP');
+                }
+                xhr.onreadystatechange = function() {
+                    if(xhr.readyState === 4) {
+                        if(xhr.status === 200) {
+                            const body = JSON.parse(xhr.responseTextext);
+                        resolve(body)
+                        } else {
+                            reject(xhr.responseText);
+                        }
+                    }
+                };
+                xhr.onerror = function(err) {
+                    reject(err);
+                };
+                xhr.open('GET', url);
+                xhr.send();
+            });
+        },
+        filterGoods() {
+            const regexp = new RegExp(this.searchLine, 'i');
+            this.filterGoods = this.goods.filter((good) => regexp.test(good.product_name));
+        },
+        toggleCartVisibility() {
+            this.isVisibleCart = !this.isVisibleCart;
+        }
+    },
+    computed: {
+        isFilteredGoodsEmpty() {
+            return this.filteredGoods.length === 0;
+        }
+    }
+    async mounted() {
+        try {
+            this.goods = await this.makeGETRequest(`${API_URL}/catalogData.json`);
+            this.filteredGoods = [...this.goods];
+        } catch(e) {
+            console.error(e);
+        }
+    }
+});
